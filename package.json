@@ -1,6 +1,6 @@
 {
   "name": "@wrule/audio-agent",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "audio-agent",
   "main": "index.js",
   "type": "module",
