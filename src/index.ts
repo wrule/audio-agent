@@ -107,7 +107,7 @@ async function info() {
 async function main() {
   const app = express();
   app.get('/api/info', async (req, res) => {
-    res.json({ success: true, object: await info() });
+    res.json({ success: true, object: { name: 'audio-agent', ...(await info()) } });
   });
   app.get('/api/volume', async (req, res) => {
     const open = (req.query.open as string)?.toLowerCase() === 'true';
