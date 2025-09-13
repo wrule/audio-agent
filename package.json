@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "audio-agent",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "dev": "tsx --watch ./src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -21,5 +22,8 @@
     "@types/node": "^22.18.3",
     "tsx": "^4.20.5",
     "typescript": "^5.9.2"
+  },
+  "dependencies": {
+    "applescript": "^1.0.0"
   }
 }
