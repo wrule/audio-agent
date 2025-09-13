@@ -1,4 +1,7 @@
+import express from 'express';
 import applescript from 'applescript';
+
+const PORT = 43991;
 
 // 获取当前系统输出音量（[0 - 100]）
 function getVolume() {
@@ -102,9 +105,23 @@ async function info() {
 }
 
 async function main() {
-  await volume(true);
-  await inputVolume(true);
-  console.log(await info());
+  const app = express();
+  app.get('/api/info', async (req, res) => {
+    res.json({ success: true, object: await info() });
+  });
+  app.get('/api/volume', async (req, res) => {
+    const open = (req.query.open as string)?.toLowerCase() === 'true';
+    await volume(open);
+    res.json({ success: true });
+  });
+  app.get('/api/input-volume', async (req, res) => {
+    const open = (req.query.open as string)?.toLowerCase() === 'true';
+    await inputVolume(open);
+    res.json({ success: true });
+  });
+  app.listen(PORT, () => {
+    console.log(`🔊 Audio agent server is running on http://localhost:${PORT}/api/info`);
+  });
 }
 
 main();
