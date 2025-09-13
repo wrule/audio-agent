@@ -60,9 +60,41 @@ function getInputVolume() {
   });
 }
 
+// 设置当前系统输入音量（[0 - 100]）
+function setInputVolume(volume: number) {
+  return new Promise<void>((resolve, reject) => {
+    if (volume > 100) {
+      volume = 100;
+    }
+    if (volume < 0) {
+      volume = 0;
+    }
+    volume = Math.floor(volume);
+    const script = `set volume input volume ${volume}`;
+    applescript.execString(script, (error: Error) => {
+      if (error) {
+        reject(error);
+        return;
+      }
+      getInputVolume().then((currentInputVolume) => {
+        if (currentInputVolume === volume) {
+          resolve();
+        } else {
+          reject('CurrentInputVolume Error');
+        }
+      }).catch((error) => reject(error));
+    });
+  });
+}
+
+// 开关当前麦克风
+function inputVolume(open: boolean) {
+  return setInputVolume(open ? 50 : 0);
+}
+
 async function main() {
   await volume(true);
-  console.log(await getInputVolume());
+  await inputVolume(true);
 }
 
 main();
