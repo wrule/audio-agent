@@ -92,9 +92,19 @@ function inputVolume(open: boolean) {
   return setInputVolume(open ? 50 : 0);
 }
 
+// 获取当前音量信息
+async function info() {
+  const [volume, inputVolume] = await Promise.all([
+    getVolume(),
+    getInputVolume(),
+  ]);
+  return { volume, inputVolume };
+}
+
 async function main() {
   await volume(true);
   await inputVolume(true);
+  console.log(await info());
 }
 
 main();
