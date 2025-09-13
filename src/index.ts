@@ -41,9 +41,13 @@ function setVolume(volume: number) {
   });
 }
 
+// 开关当前系统声音
+function volume(open: boolean) {
+  return setVolume(open ? 50 : 0);
+}
+
 async function main() {
-  await setVolume(40);
-  console.log(1234);
+  await volume(true);
 }
 
 main();
