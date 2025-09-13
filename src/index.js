@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import express from 'express';
 import applescript from 'applescript';
 const PORT = 43991;
