@@ -1,12 +1,49 @@
 import applescript from 'applescript';
 
-// 设置系统音量 (0-100)
-function setVolume(volume: number) {
-  const script = `set volume output volume ${volume}`;
-  applescript.execString(script, (err, result) => {
-    if (err) console.error(err);
-    else console.log('音量已设置为:', volume);
+// 获取当前系统输出音量（[0 - 100]）
+function getVolume() {
+  return new Promise<number>((resolve, reject) => {
+    const script = `output volume of (get volume settings)`;
+    applescript.execString(script, (error: Error, result: any) => {
+      if (error) {
+        reject(error);
+        return;
+      }
+      resolve(Math.floor(result));
+    });
   });
 }
 
-setVolume(40);
+// 设置当前系统输出音量（[0 - 100]）
+function setVolume(volume: number) {
+  return new Promise<void>((resolve, reject) => {
+    if (volume > 100) {
+      volume = 100;
+    }
+    if (volume < 0) {
+      volume = 0;
+    }
+    volume = Math.floor(volume);
+    const script = `set volume output volume ${volume}`;
+    applescript.execString(script, (error: Error) => {
+      if (error) {
+        reject(error);
+        return;
+      }
+      getVolume().then((currentVolume) => {
+        if (currentVolume === volume) {
+          resolve();
+        } else {
+          reject('CurrentVolume Error');
+        }
+      }).catch((error) => reject(error));
+    });
+  });
+}
+
+async function main() {
+  await setVolume(40);
+  console.log(1234);
+}
+
+main();
