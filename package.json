@@ -5,10 +5,11 @@
   "main": "index.js",
   "type": "module",
   "bin": {
-    "audio-agent": "./src/index.ts"
+    "audio-agent": "./src/index.js"
   },
   "scripts": {
     "dev": "tsx --watch ./src/index.ts",
+    "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -24,11 +25,11 @@
   "devDependencies": {
     "@types/express": "^5.0.3",
     "@types/node": "^22.18.3",
+    "tsx": "^4.20.5",
     "typescript": "^5.9.2"
   },
   "dependencies": {
     "applescript": "^1.0.0",
-    "express": "^5.1.0",
-    "tsx": "^4.20.5"
+    "express": "^5.1.0"
   }
 }
