@@ -46,8 +46,23 @@ function volume(open: boolean) {
   return setVolume(open ? 50 : 0);
 }
 
+// 获取当前系统输入音量（[0 - 100]）
+function getInputVolume() {
+  return new Promise<number>((resolve, reject) => {
+    const script = `input volume of (get volume settings)`;
+    applescript.execString(script, (error: Error, result: any) => {
+      if (error) {
+        reject(error);
+        return;
+      }
+      resolve(Math.floor(result));
+    });
+  });
+}
+
 async function main() {
   await volume(true);
+  console.log(await getInputVolume());
 }
 
 main();
