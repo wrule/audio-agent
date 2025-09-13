@@ -1,0 +1,24 @@
+{
+  "name": "audio-agent",
+  "version": "1.0.0",
+  "description": "audio-agent",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wrule/audio-agent.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wrule/audio-agent/issues"
+  },
+  "homepage": "https://github.com/wrule/audio-agent#readme",
+  "devDependencies": {
+    "@types/node": "^22.18.3",
+    "tsx": "^4.20.5",
+    "typescript": "^5.9.2"
+  }
+}
