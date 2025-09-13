@@ -1,4 +1,3 @@
-#!/usr/bin/env tsx
 import express from 'express';
 import applescript from 'applescript';
 
