@@ -1,5 +1,5 @@
 {
-  "name": "audio-agent",
+  "name": "@wrule/audio-agent",
   "version": "1.0.0",
   "description": "audio-agent",
   "main": "index.js",
