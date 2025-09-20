@@ -1,7 +1,8 @@
 #!/usr/bin/env node
+import axios from 'axios';
 import express from 'express';
-import applescript from 'applescript';
 import notifier from 'node-notifier';
+import applescript from 'applescript';
 import { GlobalKeyboardListener } from 'node-global-key-listener';
 
 const PORT = 43991;
@@ -113,6 +114,17 @@ function notify(active: boolean) {
     title: `${active ? '🟢' : '🔴'} Network Agent`,
     message: active ? 'Hello, there!' : 'Bye!',
   });
+}
+
+// 音频输入聚焦/失焦
+async function inputFocus(focus: boolean, twinIp?: string) {
+  if (twinIp) {
+    const { data } = await axios.get(`http://${twinIp}:${PORT}/api/input-volume?open=${focus ? 'false' : 'true'}`);
+    if (data.success !== true) {
+      throw new Error('disable twin failed!');
+    }
+  }
+  await inputVolume(focus);
 }
 
 async function main() {
