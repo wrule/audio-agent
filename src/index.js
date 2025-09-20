@@ -1,6 +1,9 @@
 #!/usr/bin/env node
+import axios from 'axios';
 import express from 'express';
+import notifier from 'node-notifier';
 import applescript from 'applescript';
+import { GlobalKeyboardListener } from 'node-global-key-listener';
 const PORT = 43991;
 // 获取当前系统输出音量（[0 - 100]）
 function getVolume() {
@@ -87,8 +90,9 @@ function setInputVolume(volume) {
     });
 }
 // 开关当前麦克风
-function inputVolume(open) {
-    return setInputVolume(open ? 50 : 0);
+async function inputVolume(open) {
+    await setInputVolume(open ? 50 : 0);
+    notify(open);
 }
 // 获取当前音量信息
 async function info() {
@@ -97,6 +101,24 @@ async function info() {
         getInputVolume(),
     ]);
     return { volume, inputVolume };
+}
+// 输出状态通知
+function notify(active) {
+    notifier.notify({
+        title: `${active ? '🟢' : '🔴'} Network ${active ? 'Online' : 'Offline'}`,
+        message: active ? 'Hello, there!' : 'Bye!',
+    });
+}
+// 音频输入聚焦/失焦
+async function inputFocus(focus) {
+    const twinIp = process.env.AUDIO_AGENT_TWIN_IP;
+    if (twinIp) {
+        const { data } = await axios.get(`http://${twinIp}:${PORT}/api/input-volume?open=${focus ? 'false' : 'true'}`);
+        if (data.success !== true) {
+            throw new Error('disable twin failed!');
+        }
+    }
+    await inputVolume(focus);
 }
 async function main() {
     const app = express();
@@ -115,6 +137,13 @@ async function main() {
     });
     app.listen(PORT, () => {
         console.log(`🔊 Audio agent server is running on http://localhost:${PORT}/api/info`);
+    });
+    let focus = false;
+    const v = new GlobalKeyboardListener();
+    v.addListener((event, down) => {
+        if (event.name === 'RIGHT CTRL' && event.state === 'DOWN') {
+            inputFocus(!focus).then(() => focus = !focus);
+        }
     });
 }
 main();
