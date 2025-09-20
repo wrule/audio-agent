@@ -32,6 +32,7 @@
   "dependencies": {
     "applescript": "^1.0.0",
     "express": "^5.1.0",
+    "node-global-key-listener": "^0.3.0",
     "node-notifier": "^10.0.1"
   }
 }

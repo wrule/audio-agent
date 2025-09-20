@@ -2,6 +2,7 @@
 import express from 'express';
 import applescript from 'applescript';
 import notifier from 'node-notifier';
+import { GlobalKeyboardListener } from 'node-global-key-listener';
 
 const PORT = 43991;
 
@@ -132,8 +133,13 @@ async function main() {
   app.listen(PORT, () => {
     console.log(`🔊 Audio agent server is running on http://localhost:${PORT}/api/info`);
   });
+
+  const v = new GlobalKeyboardListener();
+  v.addListener((event, down) => {
+    if (event.name === 'RIGHT CTRL' && event.state === 'DOWN') {
+      console.log('按下了');
+    }
+  });
 }
 
 main();
-
-notify(false);
