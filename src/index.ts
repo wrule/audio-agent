@@ -117,7 +117,8 @@ function notify(active: boolean) {
 }
 
 // 音频输入聚焦/失焦
-async function inputFocus(focus: boolean, twinIp?: string) {
+async function inputFocus(focus: boolean) {
+  const twinIp = process.env.AUDIO_AGENT_TWIN_IP;
   if (twinIp) {
     const { data } = await axios.get(`http://${twinIp}:${PORT}/api/input-volume?open=${focus ? 'false' : 'true'}`);
     if (data.success !== true) {
