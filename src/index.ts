@@ -95,8 +95,9 @@ function setInputVolume(volume: number) {
 }
 
 // 开关当前麦克风
-function inputVolume(open: boolean) {
-  return setInputVolume(open ? 50 : 0);
+async function inputVolume(open: boolean) {
+  await setInputVolume(open ? 50 : 0);
+  notify(open);
 }
 
 // 获取当前音量信息
@@ -147,10 +148,11 @@ async function main() {
     console.log(`🔊 Audio agent server is running on http://localhost:${PORT}/api/info`);
   });
 
+  let focus = false;
   const v = new GlobalKeyboardListener();
   v.addListener((event, down) => {
     if (event.name === 'RIGHT CTRL' && event.state === 'DOWN') {
-      console.log('按下了');
+      inputFocus(!focus).then(() => focus = !focus);
     }
   });
 }
