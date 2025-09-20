@@ -112,7 +112,7 @@ async function info() {
 // 输出状态通知
 function notify(active: boolean) {
   notifier.notify({
-    title: `${active ? '🟢' : '🔴'} Network Agent`,
+    title: `${active ? '🟢' : '🔴'} Network ${active ? 'Online' : 'Offline'}`,
     message: active ? 'Hello, there!' : 'Bye!',
   });
 }
