@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import express from 'express';
 import applescript from 'applescript';
+import notifier from 'node-notifier';
 
 const PORT = 43991;
 
@@ -105,6 +106,14 @@ async function info() {
   return { volume, inputVolume };
 }
 
+// 输出状态通知
+function notify(active: boolean) {
+  notifier.notify({
+    title: `${active ? '🟢' : '🔴'} Network Agent`,
+    message: active ? 'Hello, there!' : 'Bye!',
+  });
+}
+
 async function main() {
   const app = express();
   app.get('/api/info', async (req, res) => {
@@ -126,3 +135,5 @@ async function main() {
 }
 
 main();
+
+notify(false);
