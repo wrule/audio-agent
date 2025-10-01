@@ -104,7 +104,7 @@ class AudioAgent {
 
   private async loseFocus() {
     await setInputVolume(0);
-    await setVolume(25);
+    await setVolume(40);
     notify(false);
   }
 
