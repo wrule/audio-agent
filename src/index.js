@@ -1,10 +1,7 @@
 #!/usr/bin/env node
-import axios from 'axios';
-import express from 'express';
+import robot from 'robotjs';
 import notifier from 'node-notifier';
 import applescript from 'applescript';
-import { GlobalKeyboardListener } from 'node-global-key-listener';
-const PORT = 43991;
 // 获取当前系统输出音量（[0 - 100]）
 function getVolume() {
     return new Promise((resolve, reject) => {
@@ -44,10 +41,6 @@ function setVolume(volume) {
             }).catch((error) => reject(error));
         });
     });
-}
-// 开关当前系统声音
-function volume(open) {
-    return setVolume(open ? 50 : 0);
 }
 // 获取当前系统输入音量（[0 - 100]）
 function getInputVolume() {
@@ -89,61 +82,44 @@ function setInputVolume(volume) {
         });
     });
 }
-// 开关当前麦克风
-async function inputVolume(open) {
-    await setInputVolume(open ? 50 : 0);
-    notify(open);
-}
-// 获取当前音量信息
-async function info() {
-    const [volume, inputVolume] = await Promise.all([
-        getVolume(),
-        getInputVolume(),
-    ]);
-    return { volume, inputVolume };
-}
 // 输出状态通知
 function notify(active) {
     notifier.notify({
-        title: `${active ? '🟢' : '🔴'} Network ${active ? 'Online' : 'Offline'}`,
+        title: `${active ? '🟢' : '🔴'} Agent ${active ? 'Online' : 'Offline'}`,
         message: active ? 'Hello, there!' : 'Bye!',
     });
 }
-// 音频输入聚焦/失焦
-async function inputFocus(focus) {
-    const twinIp = process.env.AUDIO_AGENT_TWIN_IP;
-    if (twinIp) {
-        const { data } = await axios.get(`http://${twinIp}:${PORT}/api/input-volume?open=${focus ? 'false' : 'true'}`);
-        if (data.success !== true) {
-            throw new Error('disable twin failed!');
-        }
+class AudioAgent {
+    active = false;
+    async getFocus() {
+        await setInputVolume(50);
+        await setVolume(50);
+        notify(true);
     }
-    await inputVolume(focus);
-}
-async function main() {
-    const app = express();
-    app.get('/api/info', async (req, res) => {
-        res.json({ success: true, object: { name: 'audio-agent', ...(await info()) } });
-    });
-    app.get('/api/volume', async (req, res) => {
-        const open = req.query.open?.toLowerCase() === 'true';
-        await volume(open);
-        res.json({ success: true });
-    });
-    app.get('/api/input-volume', async (req, res) => {
-        const open = req.query.open?.toLowerCase() === 'true';
-        await inputVolume(open);
-        res.json({ success: true });
-    });
-    app.listen(PORT, () => {
-        console.log(`🔊 Audio agent server is running on http://localhost:${PORT}/api/info`);
-    });
-    let focus = false;
-    const v = new GlobalKeyboardListener();
-    v.addListener((event, down) => {
-        if (event.name === 'RIGHT CTRL' && event.state === 'DOWN') {
-            inputFocus(!focus).then(() => focus = !focus);
+    async loseFocus() {
+        await setInputVolume(0);
+        await setVolume(25);
+        notify(false);
+    }
+    async CheckActive() {
+        try {
+            const pos = robot.getMousePos();
+            const isActive = pos.x !== 0 && pos.y !== 0;
+            if (isActive !== this.active) {
+                await (isActive ? this.getFocus() : this.loseFocus());
+                this.active = isActive;
+            }
         }
-    });
+        catch (error) {
+            console.error(error);
+        }
+        setTimeout(() => {
+            this.CheckActive();
+        }, 250);
+    }
+}
+function main() {
+    const agent = new AudioAgent();
+    agent.CheckActive();
 }
 main();
