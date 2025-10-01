@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import robot from 'robotjs';
 import notifier from 'node-notifier';
 import applescript from 'applescript';
 
@@ -112,7 +113,37 @@ function notify(active: boolean) {
   });
 }
 
-async function main() {
+class AudioAgent {
+  private active = false;
+
+  private getFocus() {
+    console.log('获得焦点');
+  }
+
+  private loseFocus() {
+    console.log('失去焦点');
+  }
+
+  public async CheckActive() {
+    try {
+      const pos = robot.getMousePos();
+      const isActive = pos.x !== 0 && pos.y !== 0;
+      if (isActive !== this.active) {
+        await (isActive ? this.getFocus() : this.loseFocus());
+        this.active = isActive;
+      }
+    } catch (error) {
+      console.error(error);
+    }
+    setTimeout(() => {
+      this.CheckActive();
+    }, 250);
+  }
+}
+
+function main() {
+  const agent = new AudioAgent();
+  agent.CheckActive();
 }
 
 main();

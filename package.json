@@ -23,7 +23,6 @@
   },
   "homepage": "https://github.com/wrule/audio-agent#readme",
   "devDependencies": {
-    "@types/express": "^5.0.3",
     "@types/node": "^22.18.3",
     "@types/node-notifier": "^8.0.5",
     "tsx": "^4.20.5",
@@ -31,9 +30,7 @@
   },
   "dependencies": {
     "applescript": "^1.0.0",
-    "axios": "^1.12.2",
-    "express": "^5.1.0",
-    "node-global-key-listener": "^0.3.0",
-    "node-notifier": "^10.0.1"
+    "node-notifier": "^10.0.1",
+    "robotjs": "^0.6.0"
   }
 }
