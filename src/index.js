@@ -91,14 +91,17 @@ function notify(active) {
 }
 class AudioAgent {
     active = false;
+    FIV = process.env.FIV ? Number(process.env.FIV) : 50;
+    FOV = process.env.FOV ? Number(process.env.FOV) : 50;
+    LOV = process.env.LOV ? Number(process.env.LOV) : 40;
     async getFocus() {
-        await setInputVolume(50);
-        await setVolume(50);
+        await setInputVolume(this.FIV);
+        await setVolume(this.FOV);
         notify(true);
     }
     async loseFocus() {
         await setInputVolume(0);
-        await setVolume(25);
+        await setVolume(this.LOV);
         notify(false);
     }
     async CheckActive() {
