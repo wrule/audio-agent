@@ -95,16 +95,19 @@ function notify(active: boolean) {
 
 class AudioAgent {
   private active = false;
+  private readonly FIV = process.env.FIV ? Number(process.env.FIV) : 50;
+  private readonly FOV = process.env.FOV ? Number(process.env.FOV) : 50;
+  private readonly LOV = process.env.LOV ? Number(process.env.LOV) : 40;
 
   private async getFocus() {
-    await setInputVolume(50);
-    await setVolume(50);
+    await setInputVolume(this.FIV);
+    await setVolume(this.FOV);
     notify(true);
   }
 
   private async loseFocus() {
     await setInputVolume(0);
-    await setVolume(40);
+    await setVolume(this.LOV);
     notify(false);
   }
 
