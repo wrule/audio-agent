@@ -44,11 +44,6 @@ function setVolume(volume: number) {
   });
 }
 
-// 开关当前系统声音
-function volume(open: boolean) {
-  return setVolume(open ? 50 : 0);
-}
-
 // 获取当前系统输入音量（[0 - 100]）
 function getInputVolume() {
   return new Promise<number>((resolve, reject) => {
@@ -90,25 +85,10 @@ function setInputVolume(volume: number) {
   });
 }
 
-// 开关当前麦克风
-async function inputVolume(open: boolean) {
-  await setInputVolume(open ? 50 : 0);
-  notify(open);
-}
-
-// 获取当前音量信息
-async function info() {
-  const [volume, inputVolume] = await Promise.all([
-    getVolume(),
-    getInputVolume(),
-  ]);
-  return { volume, inputVolume };
-}
-
 // 输出状态通知
 function notify(active: boolean) {
   notifier.notify({
-    title: `${active ? '🟢' : '🔴'} Network ${active ? 'Online' : 'Offline'}`,
+    title: `${active ? '🟢' : '🔴'} Agent ${active ? 'Online' : 'Offline'}`,
     message: active ? 'Hello, there!' : 'Bye!',
   });
 }
@@ -116,12 +96,16 @@ function notify(active: boolean) {
 class AudioAgent {
   private active = false;
 
-  private getFocus() {
-    console.log('获得焦点');
+  private async getFocus() {
+    await setInputVolume(50);
+    await setVolume(50);
+    notify(true);
   }
 
-  private loseFocus() {
-    console.log('失去焦点');
+  private async loseFocus() {
+    await setInputVolume(0);
+    await setVolume(25);
+    notify(false);
   }
 
   public async CheckActive() {
