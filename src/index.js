@@ -107,7 +107,7 @@ class AudioAgent {
     async CheckActive() {
         try {
             const pos = robot.getMousePos();
-            const isActive = pos.x !== 0 && pos.y !== 0;
+            const isActive = pos.x !== 0 || pos.y !== 0;
             if (isActive !== this.active) {
                 await (isActive ? this.getFocus() : this.loseFocus());
                 this.active = isActive;
