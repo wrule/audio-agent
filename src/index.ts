@@ -95,6 +95,7 @@ function notify(active: boolean) {
 
 class AudioAgent {
   private active = false;
+  private timer!: NodeJS.Timeout;
   private readonly FIV = process.env.FIV ? Number(process.env.FIV) : 50;
   private readonly FOV = process.env.FOV ? Number(process.env.FOV) : 60;
   private readonly LOV = process.env.LOV ? Number(process.env.LOV) : 30;
@@ -116,8 +117,9 @@ class AudioAgent {
       const pos = robot.getMousePos();
       const isActive = pos.x !== 0 || pos.y !== 0;
       if (isActive !== this.active) {
-        await (isActive ? this.getFocus() : this.loseFocus());
         this.active = isActive;
+        clearTimeout(this.timer);
+        this.timer = setTimeout(() => isActive ? this.getFocus() : this.loseFocus(), 2000);
       }
     } catch (error) {
       console.error(error);
