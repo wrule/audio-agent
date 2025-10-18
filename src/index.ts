@@ -96,8 +96,8 @@ function notify(active: boolean) {
 class AudioAgent {
   private active = false;
   private readonly FIV = process.env.FIV ? Number(process.env.FIV) : 50;
-  private readonly FOV = process.env.FOV ? Number(process.env.FOV) : 50;
-  private readonly LOV = process.env.LOV ? Number(process.env.LOV) : 40;
+  private readonly FOV = process.env.FOV ? Number(process.env.FOV) : 60;
+  private readonly LOV = process.env.LOV ? Number(process.env.LOV) : 30;
 
   private async getFocus() {
     await setInputVolume(this.FIV);
