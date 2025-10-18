@@ -99,6 +99,7 @@ class AudioAgent {
   private readonly FIV = process.env.FIV ? Number(process.env.FIV) : 50;
   private readonly FOV = process.env.FOV ? Number(process.env.FOV) : 60;
   private readonly LOV = process.env.LOV ? Number(process.env.LOV) : 30;
+  private readonly DBNC = process.env.DBNC ? Number(process.env.DBNC) : 2000;
 
   private async getFocus() {
     await setInputVolume(this.FIV);
@@ -119,7 +120,7 @@ class AudioAgent {
       if (isActive !== this.active) {
         this.active = isActive;
         clearTimeout(this.timer);
-        this.timer = setTimeout(() => isActive ? this.getFocus() : this.loseFocus(), 2000);
+        this.timer = setTimeout(() => isActive ? this.getFocus() : this.loseFocus(), this.DBNC);
       }
     } catch (error) {
       console.error(error);
